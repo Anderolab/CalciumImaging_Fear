@@ -111,9 +111,9 @@ elseif choice == 2
         Bins.(sprintf('Bin%d', i)) = bin_contents;
     end 
 
-    for i = 1:numel(field_names)
+for i = 1:numel(field_names)
         Experiment1 = Experiment_grouped.(field_names{i});
-        animals1 = fields(Experiment1.(Paradigm));
+        animals1 = fields(Experiment1.(Paradigm))
         for y = 1:numel(animals1)
             titles = Experiment1.(Paradigm).(animals1{y}).Task.Titles; %Titles del singolo animale
             for a = 1:numel(titles)
@@ -121,7 +121,17 @@ elseif choice == 2
                     bin_items = Bins.(sprintf('Bin%d', b));
                     for j = 1:numel(bin_items)
                         if contains(titles{a}, bin_items{j})
-                            titles{a} = regexprep(titles{a}, '\d+', num2str(b));
+                            disp(['Processing title: ' titles{a}])
+                            disp(['Replacing bin number: ' num2str(b)])
+    
+                            % Split the title into two words
+                            words = strsplit(titles{a}, ' ');
+    
+                            % Check if the second word is a number and matches 'b'
+                            if numel(words) == 2 && strcmp(words{2}, bin_items{j})
+                                titles{a} = strcat(words{1}, " ", num2str(b)); % Keep the first word, remove the number
+                                titles{a} = titles{a}{1};
+                            end
                         end
                     end
                 end
